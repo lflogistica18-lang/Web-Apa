@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>APA Soluciones Gastronómicas — Opciones de Landing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  html, body { margin: 0; padding: 0; background: #E9E5DD; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; }
+  button { font-family: inherit; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(10,31,61,.18); border-radius: 99px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="assets/data.js"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="assets/logo.jsx"></script>
+<script type="text/babel" src="assets/placeholders.jsx"></script>
+<script type="text/babel" src="assets/widgets.jsx"></script>
+<script type="text/babel" src="option-a.jsx"></script>
+<script type="text/babel" src="option-b.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#F26A1F",
+  "navy": "#0A1F3D",
+  "heroEyebrow": "Eficiencia profesional con sabor artesanal",
+  "heroTitle": "Soluciones Gastronómicas que Potencian tu Día",
+  "heroSubtitle": "Viandas para empresas, productos listos para cocinar en casa e insumos para restaurantes. Un solo aliado, control total de calidad.",
+  "ctaPrimary": "Presupuesto Empresas",
+  "ctaSecondary": "Tienda Minorista",
+  "servicioATitle": "Alimentamos a tu equipo, todos los días",
+  "servicioADesc": "Gestión integral de comedores y viandas corporativas. Menús balanceados, entrega puntual y reportes nutricionales para RRHH.",
+  "servicioBTitle": "Sabor casero, listo en minutos",
+  "servicioBDesc": "Productos artesanales ready-to-cook. Las albóndigas de carne y pollo que prepara tu familia, ahora en tu freezer.",
+  "diff1Title": "Higiene Certificada",
+  "diff1Desc": "Procesos auditados bajo normas SENASA y trazabilidad por lote.",
+  "diff2Title": "Materia Prima de Primera",
+  "diff2Desc": "Proveedores seleccionados, carnes premium y vegetales frescos del día.",
+  "diff3Title": "Logística Propia Puntual",
+  "diff3Desc": "Flota refrigerada propia. Entregas en franjas horarias, no en ventanas amplias.",
+  "closingHook": "En APA, no solo entregamos comida; alimentamos tu crecimiento y la calidez de tu mesa.",
+  "horecaTitle": "Para Restaurantes y HoReCa",
+  "horecaDesc": "Insumos refrigerados y semielaborados por volumen. Ahorrá horas de cocina manteniendo el estándar de tu carta.",
+  "contactTitle": "Pedinos un presupuesto",
+  "contactDesc": "Contanos qué necesitás. Respondemos en menos de 24 hs hábiles.",
+  "contactEmail": "hola@apa-gastronomicas.com.ar",
+  "contactPhone": "+54 11 5555 0123",
+  "contactAddress": "Av. Siempre Viva 1234, CABA",
+  "formWebhook": "https:\/\/n8n-prod-lucas.duckdns.org\/webhook\/lead-web",
+  "chatWebhook": "https:\/\/n8n-prod-lucas.duckdns.org\/webhook\/whatsapp-viandas",
+  "chatGreeting": "¡Hola! Soy el asistente de APA. ¿En qué te ayudo hoy? Puedo orientarte sobre viandas para empresas, productos para tu hogar o pedidos para restaurantes.",
+  "carnesItem1Name": "Albóndigas en salsa",
+  "carnesItem1Desc": "Carne vacuna premium, salsa de tomate casera.",
+  "carnesItem1Price": "$ 4.800 \/ kg",
+  "carnesItem2Name": "Medallones caseros",
+  "carnesItem2Desc": "Hechos a mano, listos para sellar.",
+  "carnesItem2Price": "$ 5.200 \/ kg",
+  "carnesItem3Name": "Estofado de ternera",
+  "carnesItem3Desc": "Cocción lenta, papas y zanahorias.",
+  "carnesItem3Price": "$ 6.100 \/ kg",
+  "carnesItem4Name": "Bondiola desmenuzada",
+  "carnesItem4Desc": "Cerdo braseado, lista para sandwich.",
+  "carnesItem4Price": "$ 5.900 \/ kg",
+  "avesItem1Name": "Albóndigas de pollo",
+  "avesItem1Desc": "Pollo y hierbas frescas, salsa blanca.",
+  "avesItem1Price": "$ 4.300 \/ kg",
+  "avesItem2Name": "Suprema rellena j&q",
+  "avesItem2Desc": "Empanada crocante, lista al horno.",
+  "avesItem2Price": "$ 5.600 \/ kg",
+  "avesItem3Name": "Suprema rellena espinaca",
+  "avesItem3Desc": "Versión liviana, ricota y nuez moscada.",
+  "avesItem3Price": "$ 5.600 \/ kg",
+  "avesItem4Name": "Pollo al verdeo",
+  "avesItem4Desc": "Trozos en salsa de cebolla de verdeo.",
+  "avesItem4Price": "$ 4.900 \/ kg",
+  "pastasItem1Name": "Sorrentinos jamón y queso",
+  "pastasItem1Desc": "Masa fina, relleno generoso.",
+  "pastasItem1Price": "$ 3.800 \/ kg",
+  "pastasItem2Name": "Lasaña bolognesa",
+  "pastasItem2Desc": "5 capas, salsa scarparo, mozzarella.",
+  "pastasItem2Price": "$ 4.200 \/ kg",
+  "pastasItem3Name": "Canelones de verdura",
+  "pastasItem3Desc": "Espinaca, ricota y salsa rosa.",
+  "pastasItem3Price": "$ 3.900 \/ kg",
+  "pastasItem4Name": "Ñoquis de papa",
+  "pastasItem4Desc": "Receta tradicional, papa noble.",
+  "pastasItem4Price": "$ 3.200 \/ kg",
+  "saluItem1Name": "Bowl mediterráneo",
+  "saluItem1Desc": "Quinoa, vegetales asados y hummus.",
+  "saluItem1Price": "$ 3.600 \/ un",
+  "saluItem2Name": "Tarta integral de verduras",
+  "saluItem2Desc": "Masa de avena, vegetales de estación.",
+  "saluItem2Price": "$ 3.400 \/ un",
+  "saluItem3Name": "Wok de vegetales",
+  "saluItem3Desc": "Salteado oriental, salsa teriyaki suave.",
+  "saluItem3Price": "$ 3.500 \/ un",
+  "saluItem4Name": "Hamburguesa de lentejas",
+  "saluItem4Desc": "Vegana, lentejas y especias.",
+  "saluItem4Price": "$ 3.100 \/ un"
+}/*EDITMODE-END*/;
+
+function buildData(t) {
+  return {
+    ...window.APA_DEFAULTS,
+    heroEyebrow: t.heroEyebrow,
+    heroTitle: t.heroTitle,
+    heroSubtitle: t.heroSubtitle,
+    ctaPrimary: t.ctaPrimary,
+    ctaSecondary: t.ctaSecondary,
+    servicioAEyebrow: window.APA_DEFAULTS.servicioAEyebrow,
+    servicioATitle: t.servicioATitle,
+    servicioADesc: t.servicioADesc,
+    servicioBEyebrow: window.APA_DEFAULTS.servicioBEyebrow,
+    servicioBTitle: t.servicioBTitle,
+    servicioBDesc: t.servicioBDesc,
+    diff1Title: t.diff1Title, diff1Desc: t.diff1Desc,
+    diff2Title: t.diff2Title, diff2Desc: t.diff2Desc,
+    diff3Title: t.diff3Title, diff3Desc: t.diff3Desc,
+    closingHook: t.closingHook,
+    horecaTitle: t.horecaTitle, horecaDesc: t.horecaDesc,
+    contactTitle: t.contactTitle, contactDesc: t.contactDesc,
+    contactEmail: t.contactEmail, contactPhone: t.contactPhone, contactAddress: t.contactAddress,
+    formWebhook: t.formWebhook, chatWebhook: t.chatWebhook, chatGreeting: t.chatGreeting,
+    catCarnes: {
+      ...window.APA_DEFAULTS.catCarnes,
+      items: [
+        { name: t.carnesItem1Name, desc: t.carnesItem1Desc, price: t.carnesItem1Price },
+        { name: t.carnesItem2Name, desc: t.carnesItem2Desc, price: t.carnesItem2Price },
+        { name: t.carnesItem3Name, desc: t.carnesItem3Desc, price: t.carnesItem3Price },
+        { name: t.carnesItem4Name, desc: t.carnesItem4Desc, price: t.carnesItem4Price },
+      ],
+    },
+    catAves: {
+      ...window.APA_DEFAULTS.catAves,
+      items: [
+        { name: t.avesItem1Name, desc: t.avesItem1Desc, price: t.avesItem1Price },
+        { name: t.avesItem2Name, desc: t.avesItem2Desc, price: t.avesItem2Price },
+        { name: t.avesItem3Name, desc: t.avesItem3Desc, price: t.avesItem3Price },
+        { name: t.avesItem4Name, desc: t.avesItem4Desc, price: t.avesItem4Price },
+      ],
+    },
+    catPastas: {
+      ...window.APA_DEFAULTS.catPastas,
+      items: [
+        { name: t.pastasItem1Name, desc: t.pastasItem1Desc, price: t.pastasItem1Price },
+        { name: t.pastasItem2Name, desc: t.pastasItem2Desc, price: t.pastasItem2Price },
+        { name: t.pastasItem3Name, desc: t.pastasItem3Desc, price: t.pastasItem3Price },
+        { name: t.pastasItem4Name, desc: t.pastasItem4Desc, price: t.pastasItem4Price },
+      ],
+    },
+    catSaludable: {
+      ...window.APA_DEFAULTS.catSaludable,
+      items: [
+        { name: t.saluItem1Name, desc: t.saluItem1Desc, price: t.saluItem1Price },
+        { name: t.saluItem2Name, desc: t.saluItem2Desc, price: t.saluItem2Price },
+        { name: t.saluItem3Name, desc: t.saluItem3Desc, price: t.saluItem3Price },
+        { name: t.saluItem4Name, desc: t.saluItem4Desc, price: t.saluItem4Price },
+      ],
+    },
+  };
+}
+
+function CatTweaks({ t, setTweak, prefix, label }) {
+  return (
+    <>
+      <TweakSection label={label}/>
+      {[1,2,3,4].map(n => (
+        <React.Fragment key={n}>
+          <TweakText label={`#${n} Nombre`} value={t[`${prefix}Item${n}Name`]} onChange={v => setTweak(`${prefix}Item${n}Name`, v)}/>
+          <TweakText label={`#${n} Descripción`} value={t[`${prefix}Item${n}Desc`]} onChange={v => setTweak(`${prefix}Item${n}Desc`, v)}/>
+          <TweakText label={`#${n} Precio`} value={t[`${prefix}Item${n}Price`]} onChange={v => setTweak(`${prefix}Item${n}Price`, v)}/>
+        </React.Fragment>
+      ))}
+    </>
+  );
+}
+
+function App() {
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const data = React.useMemo(() => buildData(t), [t]);
+
+  return (
+    <>
+      <DesignCanvas
+        title="APA Soluciones Gastronómicas"
+        subtitle="Dos direcciones de landing — abrí en pantalla completa para interactuar (chat + formulario)"
+      >
+        <DCSection id="opciones" title="Direcciones de diseño">
+          <DCArtboard id="opt-a" label="Opción A — Corporativo Editorial" width={1320} height={3400}>
+            <OptionA data={data} accent={t.accent} navy={t.navy}/>
+          </DCArtboard>
+          <DCArtboard id="opt-b" label="Opción B — Mercado Cálido" width={1320} height={3500}>
+            <OptionB data={data} accent={t.accent} navy={t.navy}/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks · APA">
+        <TweakSection label="Webhooks (chat + formulario)"/>
+        <TweakText label="Webhook formulario" value={t.formWebhook} onChange={v => setTweak('formWebhook', v)} placeholder="https://…"/>
+        <TweakText label="Webhook chat" value={t.chatWebhook} onChange={v => setTweak('chatWebhook', v)} placeholder="https://…"/>
+        <TweakText label="Saludo del chat" value={t.chatGreeting} onChange={v => setTweak('chatGreeting', v)}/>
+
+        <TweakSection label="Marca"/>
+        <TweakColor label="Naranja (acento)" value={t.accent} onChange={v => setTweak('accent', v)}/>
+        <TweakColor label="Azul marino" value={t.navy} onChange={v => setTweak('navy', v)}/>
+
+        <TweakSection label="Hero"/>
+        <TweakText label="Bajada arriba" value={t.heroEyebrow} onChange={v => setTweak('heroEyebrow', v)}/>
+        <TweakText label="Título" value={t.heroTitle} onChange={v => setTweak('heroTitle', v)}/>
+        <TweakText label="Subtítulo" value={t.heroSubtitle} onChange={v => setTweak('heroSubtitle', v)}/>
+        <TweakText label="CTA primario" value={t.ctaPrimary} onChange={v => setTweak('ctaPrimary', v)}/>
+        <TweakText label="CTA secundario" value={t.ctaSecondary} onChange={v => setTweak('ctaSecondary', v)}/>
+
+        <TweakSection label="Servicios"/>
+        <TweakText label="A · Título" value={t.servicioATitle} onChange={v => setTweak('servicioATitle', v)}/>
+        <TweakText label="A · Descripción" value={t.servicioADesc} onChange={v => setTweak('servicioADesc', v)}/>
+        <TweakText label="B · Título" value={t.servicioBTitle} onChange={v => setTweak('servicioBTitle', v)}/>
+        <TweakText label="B · Descripción" value={t.servicioBDesc} onChange={v => setTweak('servicioBDesc', v)}/>
+
+        <TweakSection label="Diferenciales"/>
+        <TweakText label="1 · Título" value={t.diff1Title} onChange={v => setTweak('diff1Title', v)}/>
+        <TweakText label="1 · Descripción" value={t.diff1Desc} onChange={v => setTweak('diff1Desc', v)}/>
+        <TweakText label="2 · Título" value={t.diff2Title} onChange={v => setTweak('diff2Title', v)}/>
+        <TweakText label="2 · Descripción" value={t.diff2Desc} onChange={v => setTweak('diff2Desc', v)}/>
+        <TweakText label="3 · Título" value={t.diff3Title} onChange={v => setTweak('diff3Title', v)}/>
+        <TweakText label="3 · Descripción" value={t.diff3Desc} onChange={v => setTweak('diff3Desc', v)}/>
+
+        <TweakSection label="HoReCa & Cierre"/>
+        <TweakText label="HoReCa título" value={t.horecaTitle} onChange={v => setTweak('horecaTitle', v)}/>
+        <TweakText label="HoReCa descripción" value={t.horecaDesc} onChange={v => setTweak('horecaDesc', v)}/>
+        <TweakText label="Frase de cierre" value={t.closingHook} onChange={v => setTweak('closingHook', v)}/>
+
+        <TweakSection label="Contacto"/>
+        <TweakText label="Título contacto" value={t.contactTitle} onChange={v => setTweak('contactTitle', v)}/>
+        <TweakText label="Descripción" value={t.contactDesc} onChange={v => setTweak('contactDesc', v)}/>
+        <TweakText label="Email" value={t.contactEmail} onChange={v => setTweak('contactEmail', v)}/>
+        <TweakText label="Teléfono" value={t.contactPhone} onChange={v => setTweak('contactPhone', v)}/>
+        <TweakText label="Dirección" value={t.contactAddress} onChange={v => setTweak('contactAddress', v)}/>
+
+        <CatTweaks t={t} setTweak={setTweak} prefix="carnes" label="Catálogo · Carnes Rojas"/>
+        <CatTweaks t={t} setTweak={setTweak} prefix="aves" label="Catálogo · Aves"/>
+        <CatTweaks t={t} setTweak={setTweak} prefix="pastas" label="Catálogo · Pastas"/>
+        <CatTweaks t={t} setTweak={setTweak} prefix="salu" label="Catálogo · Saludable"/>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+</body>
+</html>

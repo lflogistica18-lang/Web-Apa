@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.vscode/
+.idea/
+*.log
+uploads/.thumbnails/
+.env
+.env.local
