@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>APA Soluciones Gastronómicas — Opciones de Landing</title>
+<title>APA Soluciones Gastronómicas — Mercado Cálido (Opción B)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
@@ -25,12 +25,12 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <script src="assets/data.js"></script>
-<script type="text/babel" src="design-canvas.jsx"></script>
+
 <script type="text/babel" src="tweaks-panel.jsx"></script>
 <script type="text/babel" src="assets/logo.jsx"></script>
 <script type="text/babel" src="assets/placeholders.jsx"></script>
 <script type="text/babel" src="assets/widgets.jsx"></script>
-<script type="text/babel" src="option-a.jsx"></script>
+
 <script type="text/babel" src="option-b.jsx"></script>
 
 <script type="text/babel" data-presets="react">
@@ -63,6 +63,30 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "formWebhook": "https:\/\/n8n-prod-lucas.duckdns.org\/webhook\/lead-web",
   "chatWebhook": "https:\/\/n8n-prod-lucas.duckdns.org\/webhook\/whatsapp-viandas",
   "chatGreeting": "¡Hola! Soy el asistente de APA. ¿En qué te ayudo hoy? Puedo orientarte sobre viandas para empresas, productos para tu hogar o pedidos para restaurantes.",
+  "stat1Num": "+15 años",
+  "stat1Label": "En el rubro",
+  "stat2Num": "+80",
+  "stat2Label": "Empresas confían",
+  "stat3Num": "98%",
+  "stat3Label": "Entregas a tiempo",
+  "navItems": "Inicio,Viandas Empresas,Market Hogar,Nuestro Menú,Nosotros,Contacto",
+  "footerTagline": "Eficiencia profesional con sabor artesanal. Buenos Aires, Argentina.",
+  "footerCuit": "CUIT 30-12345678-9",
+  "footerCol1Title": "Soluciones",
+  "footerCol1Items": "Viandas Empresas,Market Hogar,HoReCa,Catering",
+  "footerCol2Title": "Empresa",
+  "footerCol2Items": "Nosotros,Trabajá con nosotros,Prensa,Contacto",
+  "footerCol3Title": "Legales",
+  "footerCol3Items": "Términos,Privacidad,Habilitaciones,SENASA",
+  "imgHeroA": "",
+  "imgHeroADetail": "",
+  "imgServicioA": "",
+  "imgServicioB": "",
+  "imgHoreca": "",
+  "imgCarnes1": "", "imgCarnes2": "", "imgCarnes3": "", "imgCarnes4": "",
+  "imgAves1": "", "imgAves2": "", "imgAves3": "", "imgAves4": "",
+  "imgPastas1": "", "imgPastas2": "", "imgPastas3": "", "imgPastas4": "",
+  "imgSalu1": "", "imgSalu2": "", "imgSalu3": "", "imgSalu4": "",
   "carnesItem1Name": "Albóndigas en salsa",
   "carnesItem1Desc": "Carne vacuna premium, salsa de tomate casera.",
   "carnesItem1Price": "$ 4.800 \/ kg",
@@ -114,6 +138,13 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 
 function buildData(t) {
+  const buildCatItems = (prefix, imgPrefix) => [1,2,3,4].map(n => ({
+    name: t[`${prefix}Item${n}Name`],
+    desc: t[`${prefix}Item${n}Desc`],
+    price: t[`${prefix}Item${n}Price`],
+    img: t[`img${imgPrefix}${n}`],
+  }));
+
   return {
     ...window.APA_DEFAULTS,
     heroEyebrow: t.heroEyebrow,
@@ -135,46 +166,36 @@ function buildData(t) {
     contactTitle: t.contactTitle, contactDesc: t.contactDesc,
     contactEmail: t.contactEmail, contactPhone: t.contactPhone, contactAddress: t.contactAddress,
     formWebhook: t.formWebhook, chatWebhook: t.chatWebhook, chatGreeting: t.chatGreeting,
-    catCarnes: {
-      ...window.APA_DEFAULTS.catCarnes,
-      items: [
-        { name: t.carnesItem1Name, desc: t.carnesItem1Desc, price: t.carnesItem1Price },
-        { name: t.carnesItem2Name, desc: t.carnesItem2Desc, price: t.carnesItem2Price },
-        { name: t.carnesItem3Name, desc: t.carnesItem3Desc, price: t.carnesItem3Price },
-        { name: t.carnesItem4Name, desc: t.carnesItem4Desc, price: t.carnesItem4Price },
-      ],
+    // Stats del hero
+    stats: [
+      { num: t.stat1Num, label: t.stat1Label },
+      { num: t.stat2Num, label: t.stat2Label },
+      { num: t.stat3Num, label: t.stat3Label },
+    ],
+    // Navegación
+    navItems: t.navItems.split(',').map(s => s.trim()).filter(Boolean),
+    // Footer
+    footerTagline: t.footerTagline,
+    footerCuit: t.footerCuit,
+    footerColumns: [
+      { title: t.footerCol1Title, items: t.footerCol1Items.split(',').map(s => s.trim()) },
+      { title: t.footerCol2Title, items: t.footerCol2Items.split(',').map(s => s.trim()) },
+      { title: t.footerCol3Title, items: t.footerCol3Items.split(',').map(s => s.trim()) },
+    ],
+    // Imágenes de secciones
+    images: {
+      heroA: t.imgHeroA, heroADetail: t.imgHeroADetail,
+      servicioA: t.imgServicioA, servicioB: t.imgServicioB,
+      horeca: t.imgHoreca,
     },
-    catAves: {
-      ...window.APA_DEFAULTS.catAves,
-      items: [
-        { name: t.avesItem1Name, desc: t.avesItem1Desc, price: t.avesItem1Price },
-        { name: t.avesItem2Name, desc: t.avesItem2Desc, price: t.avesItem2Price },
-        { name: t.avesItem3Name, desc: t.avesItem3Desc, price: t.avesItem3Price },
-        { name: t.avesItem4Name, desc: t.avesItem4Desc, price: t.avesItem4Price },
-      ],
-    },
-    catPastas: {
-      ...window.APA_DEFAULTS.catPastas,
-      items: [
-        { name: t.pastasItem1Name, desc: t.pastasItem1Desc, price: t.pastasItem1Price },
-        { name: t.pastasItem2Name, desc: t.pastasItem2Desc, price: t.pastasItem2Price },
-        { name: t.pastasItem3Name, desc: t.pastasItem3Desc, price: t.pastasItem3Price },
-        { name: t.pastasItem4Name, desc: t.pastasItem4Desc, price: t.pastasItem4Price },
-      ],
-    },
-    catSaludable: {
-      ...window.APA_DEFAULTS.catSaludable,
-      items: [
-        { name: t.saluItem1Name, desc: t.saluItem1Desc, price: t.saluItem1Price },
-        { name: t.saluItem2Name, desc: t.saluItem2Desc, price: t.saluItem2Price },
-        { name: t.saluItem3Name, desc: t.saluItem3Desc, price: t.saluItem3Price },
-        { name: t.saluItem4Name, desc: t.saluItem4Desc, price: t.saluItem4Price },
-      ],
-    },
+    catCarnes: { ...window.APA_DEFAULTS.catCarnes, items: buildCatItems('carnes', 'Carnes') },
+    catAves: { ...window.APA_DEFAULTS.catAves, items: buildCatItems('aves', 'Aves') },
+    catPastas: { ...window.APA_DEFAULTS.catPastas, items: buildCatItems('pastas', 'Pastas') },
+    catSaludable: { ...window.APA_DEFAULTS.catSaludable, items: buildCatItems('salu', 'Salu') },
   };
 }
 
-function CatTweaks({ t, setTweak, prefix, label }) {
+function CatTweaks({ t, setTweak, prefix, imgPrefix, label }) {
   return (
     <>
       <TweakSection label={label}/>
@@ -183,6 +204,7 @@ function CatTweaks({ t, setTweak, prefix, label }) {
           <TweakText label={`#${n} Nombre`} value={t[`${prefix}Item${n}Name`]} onChange={v => setTweak(`${prefix}Item${n}Name`, v)}/>
           <TweakText label={`#${n} Descripción`} value={t[`${prefix}Item${n}Desc`]} onChange={v => setTweak(`${prefix}Item${n}Desc`, v)}/>
           <TweakText label={`#${n} Precio`} value={t[`${prefix}Item${n}Price`]} onChange={v => setTweak(`${prefix}Item${n}Price`, v)}/>
+          <TweakImage label={`#${n} Foto`} value={t[`img${imgPrefix}${n}`]} onChange={v => setTweak(`img${imgPrefix}${n}`, v)}/>
         </React.Fragment>
       ))}
     </>
@@ -190,26 +212,14 @@ function CatTweaks({ t, setTweak, prefix, label }) {
 }
 
 function App() {
-  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const [t, setTweak, { resetearTweaks, exportarTweaks, importarTweaks }] = useTweaks(TWEAK_DEFAULTS);
   const data = React.useMemo(() => buildData(t), [t]);
 
   return (
     <>
-      <DesignCanvas
-        title="APA Soluciones Gastronómicas"
-        subtitle="Dos direcciones de landing — abrí en pantalla completa para interactuar (chat + formulario)"
-      >
-        <DCSection id="opciones" title="Direcciones de diseño">
-          <DCArtboard id="opt-a" label="Opción A — Corporativo Editorial" width={1320} height={3400}>
-            <OptionA data={data} accent={t.accent} navy={t.navy}/>
-          </DCArtboard>
-          <DCArtboard id="opt-b" label="Opción B — Mercado Cálido" width={1320} height={3500}>
-            <OptionB data={data} accent={t.accent} navy={t.navy}/>
-          </DCArtboard>
-        </DCSection>
-      </DesignCanvas>
+      <OptionB data={data} accent={t.accent} navy={t.navy}/>
 
-      <TweaksPanel title="Tweaks · APA">
+      <TweaksPanel title="Editor · APA">
         <TweakSection label="Webhooks (chat + formulario)"/>
         <TweakText label="Webhook formulario" value={t.formWebhook} onChange={v => setTweak('formWebhook', v)} placeholder="https://…"/>
         <TweakText label="Webhook chat" value={t.chatWebhook} onChange={v => setTweak('chatWebhook', v)} placeholder="https://…"/>
@@ -225,6 +235,14 @@ function App() {
         <TweakText label="Subtítulo" value={t.heroSubtitle} onChange={v => setTweak('heroSubtitle', v)}/>
         <TweakText label="CTA primario" value={t.ctaPrimary} onChange={v => setTweak('ctaPrimary', v)}/>
         <TweakText label="CTA secundario" value={t.ctaSecondary} onChange={v => setTweak('ctaSecondary', v)}/>
+
+        <TweakSection label="Estadísticas del hero"/>
+        <TweakText label="Stat 1 · Número" value={t.stat1Num} onChange={v => setTweak('stat1Num', v)}/>
+        <TweakText label="Stat 1 · Label" value={t.stat1Label} onChange={v => setTweak('stat1Label', v)}/>
+        <TweakText label="Stat 2 · Número" value={t.stat2Num} onChange={v => setTweak('stat2Num', v)}/>
+        <TweakText label="Stat 2 · Label" value={t.stat2Label} onChange={v => setTweak('stat2Label', v)}/>
+        <TweakText label="Stat 3 · Número" value={t.stat3Num} onChange={v => setTweak('stat3Num', v)}/>
+        <TweakText label="Stat 3 · Label" value={t.stat3Label} onChange={v => setTweak('stat3Label', v)}/>
 
         <TweakSection label="Servicios"/>
         <TweakText label="A · Título" value={t.servicioATitle} onChange={v => setTweak('servicioATitle', v)}/>
@@ -252,10 +270,35 @@ function App() {
         <TweakText label="Teléfono" value={t.contactPhone} onChange={v => setTweak('contactPhone', v)}/>
         <TweakText label="Dirección" value={t.contactAddress} onChange={v => setTweak('contactAddress', v)}/>
 
-        <CatTweaks t={t} setTweak={setTweak} prefix="carnes" label="Catálogo · Carnes Rojas"/>
-        <CatTweaks t={t} setTweak={setTweak} prefix="aves" label="Catálogo · Aves"/>
-        <CatTweaks t={t} setTweak={setTweak} prefix="pastas" label="Catálogo · Pastas"/>
-        <CatTweaks t={t} setTweak={setTweak} prefix="salu" label="Catálogo · Saludable"/>
+        <TweakSection label="Navegación"/>
+        <TweakText label="Items del menú (comas)" value={t.navItems} onChange={v => setTweak('navItems', v)}/>
+
+        <TweakSection label="Footer"/>
+        <TweakText label="Tagline" value={t.footerTagline} onChange={v => setTweak('footerTagline', v)}/>
+        <TweakText label="CUIT" value={t.footerCuit} onChange={v => setTweak('footerCuit', v)}/>
+        <TweakText label="Col 1 · Título" value={t.footerCol1Title} onChange={v => setTweak('footerCol1Title', v)}/>
+        <TweakText label="Col 1 · Items (comas)" value={t.footerCol1Items} onChange={v => setTweak('footerCol1Items', v)}/>
+        <TweakText label="Col 2 · Título" value={t.footerCol2Title} onChange={v => setTweak('footerCol2Title', v)}/>
+        <TweakText label="Col 2 · Items (comas)" value={t.footerCol2Items} onChange={v => setTweak('footerCol2Items', v)}/>
+        <TweakText label="Col 3 · Título" value={t.footerCol3Title} onChange={v => setTweak('footerCol3Title', v)}/>
+        <TweakText label="Col 3 · Items (comas)" value={t.footerCol3Items} onChange={v => setTweak('footerCol3Items', v)}/>
+
+        <TweakSection label="Imágenes · Hero y secciones"/>
+        <TweakImage label="Hero principal" value={t.imgHeroA} onChange={v => setTweak('imgHeroA', v)}/>
+        <TweakImage label="Detalle materia prima" value={t.imgHeroADetail} onChange={v => setTweak('imgHeroADetail', v)}/>
+        <TweakImage label="Viandas Empresas" value={t.imgServicioA} onChange={v => setTweak('imgServicioA', v)}/>
+        <TweakImage label="Market Hogar" value={t.imgServicioB} onChange={v => setTweak('imgServicioB', v)}/>
+        <TweakImage label="HoReCa" value={t.imgHoreca} onChange={v => setTweak('imgHoreca', v)}/>
+
+        <CatTweaks t={t} setTweak={setTweak} prefix="carnes" imgPrefix="Carnes" label="Catálogo · Carnes Rojas"/>
+        <CatTweaks t={t} setTweak={setTweak} prefix="aves" imgPrefix="Aves" label="Catálogo · Aves"/>
+        <CatTweaks t={t} setTweak={setTweak} prefix="pastas" imgPrefix="Pastas" label="Catálogo · Pastas"/>
+        <CatTweaks t={t} setTweak={setTweak} prefix="salu" imgPrefix="Salu" label="Catálogo · Saludable"/>
+
+        <TweakSection label="🔧 Herramientas"/>
+        <TweakButton label="📥 Exportar configuración" onClick={exportarTweaks}/>
+        <TweakButton label="📤 Importar configuración" onClick={importarTweaks} secondary/>
+        <TweakButton label="🔄 Restaurar todo a defaults" onClick={() => { if (confirm('¿Seguro? Se pierden todos los cambios.')) resetearTweaks(); }} secondary/>
       </TweaksPanel>
     </>
   );

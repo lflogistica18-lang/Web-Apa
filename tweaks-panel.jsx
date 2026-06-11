@@ -134,31 +134,76 @@ const __TWEAKS_STYLE = `
 `;
 
 // ── useTweaks ───────────────────────────────────────────────────────────────
-// Single source of truth for tweak values. setTweak persists via the host
-// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+// Fuente de verdad para los valores editables. Persiste en localStorage.
+// Retorna [values, setTweak, { resetearTweaks, exportarTweaks, importarTweaks }]
+const APA_STORAGE_KEY = 'apa-tweaks';
+
 function useTweaks(defaults) {
-  const [values, setValues] = React.useState(defaults);
-  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
-  // useState-style call doesn't write a "[object Object]" key into the persisted
-  // JSON block.
+  const defaultsRef = React.useRef(defaults);
+
+  const [values, setValues] = React.useState(() => {
+    try {
+      const saved = localStorage.getItem(APA_STORAGE_KEY);
+      return saved ? { ...defaults, ...JSON.parse(saved) } : defaults;
+    } catch { return defaults; }
+  });
+
+  // Acepta setTweak('key', value) o setTweak({ key: value, ... })
   const setTweak = React.useCallback((keyOrEdits, val) => {
     const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
       ? keyOrEdits : { [keyOrEdits]: val };
-    setValues((prev) => ({ ...prev, ...edits }));
-    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+    setValues((prev) => {
+      const next = { ...prev, ...edits };
+      try { localStorage.setItem(APA_STORAGE_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
   }, []);
-  return [values, setTweak];
+
+  const resetearTweaks = React.useCallback(() => {
+    setValues(defaultsRef.current);
+    try { localStorage.removeItem(APA_STORAGE_KEY); } catch {}
+  }, []);
+
+  const exportarTweaks = React.useCallback(() => {
+    const blob = new Blob([JSON.stringify(values, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'apa-tweaks.json'; a.click();
+    URL.revokeObjectURL(url);
+  }, [values]);
+
+  const importarTweaks = React.useCallback(() => {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          setValues((prev) => {
+            const next = { ...prev, ...parsed };
+            try { localStorage.setItem(APA_STORAGE_KEY, JSON.stringify(next)); } catch {}
+            return next;
+          });
+        } catch { alert('El archivo JSON no es válido.'); }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }, []);
+
+  return [values, setTweak, { resetearTweaks, exportarTweaks, importarTweaks }];
 }
 
 // ── TweaksPanel ─────────────────────────────────────────────────────────────
-// Floating shell. Registers the protocol listener BEFORE announcing
-// availability — if the announce ran first, the host's activate could land
-// before our handler exists and the toolbar toggle would silently no-op.
-// The close button posts __edit_mode_dismissed so the host's toolbar toggle
-// flips off in lockstep; the host echoes __deactivate_edit_mode back which
-// is what actually hides the panel.
+// Panel flotante con botón de acceso visible. Protegido con PIN por sesión.
+// Ya no depende de un host externo (postMessage eliminado).
+const APA_EDITOR_PIN = '181106';
+
 function TweaksPanel({ title = 'Tweaks', children }) {
   const [open, setOpen] = React.useState(false);
+  const [authed, setAuthed] = React.useState(false);
   const dragRef = React.useRef(null);
   const offsetRef = React.useRef({ x: 16, y: 16 });
   const PAD = 16;
@@ -189,20 +234,21 @@ function TweaksPanel({ title = 'Tweaks', children }) {
     return () => ro.disconnect();
   }, [open, clampToViewport]);
 
+  // Verificar PIN por sesión — si ya autenticó no pregunta de nuevo
   React.useEffect(() => {
-    const onMsg = (e) => {
-      const t = e?.data?.type;
-      if (t === '__activate_edit_mode') setOpen(true);
-      else if (t === '__deactivate_edit_mode') setOpen(false);
-    };
-    window.addEventListener('message', onMsg);
-    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
-    return () => window.removeEventListener('message', onMsg);
+    if (sessionStorage.getItem('apa-editor-auth') === '1') setAuthed(true);
   }, []);
 
-  const dismiss = () => {
-    setOpen(false);
-    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  const intentarAbrir = () => {
+    if (authed) { setOpen(o => !o); return; }
+    const pin = prompt('Ingresá el PIN de edición:');
+    if (pin === APA_EDITOR_PIN) {
+      setAuthed(true);
+      sessionStorage.setItem('apa-editor-auth', '1');
+      setOpen(true);
+    } else if (pin !== null) {
+      alert('PIN incorrecto.');
+    }
   };
 
   const onDragStart = (e) => {
@@ -227,20 +273,41 @@ function TweaksPanel({ title = 'Tweaks', children }) {
     window.addEventListener('mouseup', up);
   };
 
-  if (!open) return null;
   return (
     <>
       <style>{__TWEAKS_STYLE}</style>
-      <div ref={dragRef} className="twk-panel"
-           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
-        <div className="twk-hd" onMouseDown={onDragStart}>
-          <b>{title}</b>
-          <button className="twk-x" aria-label="Close tweaks"
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onClick={dismiss}>✕</button>
+      {/* Botón flotante siempre visible — esquina inferior izquierda */}
+      <button
+        onClick={intentarAbrir}
+        style={{
+          position: 'fixed', left: 16, bottom: 16, zIndex: 2147483645,
+          padding: '10px 16px', borderRadius: 99, border: 0,
+          background: 'rgba(10,10,10,.82)', color: '#fff',
+          fontWeight: 600, fontSize: 12, cursor: 'pointer',
+          fontFamily: 'ui-sans-serif, system-ui, sans-serif',
+          backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+          boxShadow: '0 4px 20px rgba(0,0,0,.3), 0 0 0 .5px rgba(255,255,255,.1) inset',
+          display: 'flex', alignItems: 'center', gap: 6,
+          transition: 'transform .15s, background .15s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.background = 'rgba(30,30,30,.95)'}
+        onMouseLeave={e => e.currentTarget.style.background = 'rgba(10,10,10,.82)'}
+      >
+        {open ? '✕ Cerrar editor' : '✏️ Editar página'}
+      </button>
+
+      {open && (
+        <div ref={dragRef} className="twk-panel"
+             style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+          <div className="twk-hd" onMouseDown={onDragStart}>
+            <b>{title}</b>
+            <button className="twk-x" aria-label="Cerrar editor"
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onClick={() => setOpen(false)}>✕</button>
+          </div>
+          <div className="twk-body">{children}</div>
         </div>
-        <div className="twk-body">{children}</div>
-      </div>
+      )}
     </>
   );
 }
@@ -418,8 +485,67 @@ function TweakButton({ label, onClick, secondary = false }) {
   );
 }
 
+// ── TweakImage — upload de imágenes como Data URL ───────────────────────────
+// Máx 500KB por imagen para no saturar localStorage (~5MB límite).
+function TweakImage({ label, value, onChange }) {
+  const subirImagen = () => {
+    const input = document.createElement('input');
+    input.type = 'file'; input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      if (file.size > 500 * 1024) {
+        alert('La imagen es muy pesada (máx 500KB). Comprimila antes de subirla.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => onChange(ev.target.result);
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div style={{ display:'flex', gap:6, alignItems:'center' }}>
+        {value
+          ? <img src={value} alt={label} style={{
+              width:44, height:44, objectFit:'cover', borderRadius:6,
+              border:'.5px solid rgba(0,0,0,.1)', flexShrink:0
+            }}/>
+          : <div style={{
+              width:44, height:44, borderRadius:6, background:'rgba(0,0,0,.06)',
+              display:'grid', placeItems:'center', fontSize:16, color:'rgba(0,0,0,.35)', flexShrink:0
+            }}>📷</div>
+        }
+        <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+          <button type="button" className="twk-btn" onClick={subirImagen}
+                  style={{ fontSize:10, padding:'0 8px', height:20 }}>Subir</button>
+          {value && <button type="button" className="twk-btn secondary" onClick={() => onChange('')}
+                  style={{ fontSize:10, padding:'0 8px', height:20 }}>Quitar</button>}
+        </div>
+      </div>
+    </TweakRow>
+  );
+}
+
+// ── ImagenEditable — Patrón G: un solo componente reusable ──────────────────
+// Si hay src (Data URL o URL) muestra <img>, si no muestra <FoodPlaceholder>.
+function ImagenEditable({ src, label, aspect, rounded = 14, accent, tone, dark }) {
+  if (src) {
+    return (
+      <img src={src} alt={label}
+        style={{
+          width: '100%', aspectRatio: aspect, objectFit: 'cover',
+          borderRadius: rounded, display: 'block',
+        }}/>
+    );
+  }
+  return <FoodPlaceholder label={label} aspect={aspect} rounded={rounded} accent={accent} tone={tone} dark={dark}/>;
+}
+
 Object.assign(window, {
   useTweaks, TweaksPanel, TweakSection, TweakRow,
   TweakSlider, TweakToggle, TweakRadio, TweakSelect,
   TweakText, TweakNumber, TweakColor, TweakButton,
+  TweakImage, ImagenEditable,
 });

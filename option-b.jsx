@@ -25,7 +25,7 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
       }}>
         <ApaLogo variant="color" height={44}/>
         <div style={{ display: 'flex', gap: 28, fontSize: 14, fontWeight: 500 }}>
-          {['Inicio', 'Viandas Empresas', 'Market Hogar', 'Nuestro Menú', 'Nosotros', 'Contacto'].map((l) => (
+          {data.navItems.map((l) => (
             <a key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} style={{ color: 'rgba(10,31,61,.78)', textDecoration: 'none' }}>{l}</a>
           ))}
         </div>
@@ -86,7 +86,7 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
             <div style={{ position: 'relative', zIndex: 2, height: 420 }}>
               <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center' }}>
                 <div style={{ width: 420, height: 420, borderRadius: 99, overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,.25)', border: '8px solid rgba(255,255,255,.2)' }}>
-                  <FoodPlaceholder label="Plato hero · estrella" aspect="1/1" rounded={0} accent="#fff" tone="warm"/>
+                  <ImagenEditable src={data.images.heroA} label="Plato hero · estrella" aspect="1/1" rounded={0} accent="#fff" tone="warm"/>
                 </div>
                 {/* etiqueta flotante */}
                 <div style={{ position: 'absolute', top: 30, right: -10, background: '#fff', color: navy, padding: '12px 18px', borderRadius: 14, boxShadow: '0 8px 20px rgba(0,0,0,.15)', fontSize: 13, lineHeight: 1.3 }}>
@@ -123,8 +123,8 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
             {[
-              { eyebrow: data.servicioAEyebrow, title: data.servicioATitle, desc: data.servicioADesc, icon: Icons.Building, cta: 'Pedir presupuesto', tone: 'cool' },
-              { eyebrow: data.servicioBEyebrow, title: data.servicioBTitle, desc: data.servicioBDesc, icon: Icons.Home, cta: 'Ver tienda', tone: 'warm' },
+              { eyebrow: data.servicioAEyebrow, title: data.servicioATitle, desc: data.servicioADesc, icon: Icons.Building, img: data.images.servicioA, cta: 'Pedir presupuesto', tone: 'cool' },
+              { eyebrow: data.servicioBEyebrow, title: data.servicioBTitle, desc: data.servicioBDesc, icon: Icons.Home, img: data.images.servicioB, cta: 'Ver tienda', tone: 'warm' },
             ].map((s, i) => {
               const Icon = s.icon;
               return (
@@ -133,7 +133,7 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
                   display: 'grid', gridTemplateColumns: '1fr 1.1fr',
                   border: '1px solid rgba(10,31,61,.05)',
                 }}>
-                  <FoodPlaceholder label={`${s.eyebrow}`} aspect="1/1" rounded={0} accent={accent} tone={s.tone}/>
+                  <ImagenEditable src={s.img} label={`${s.eyebrow}`} aspect="1/1" rounded={0} accent={accent} tone={s.tone}/>
                   <div style={{ padding: '32px 30px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, color: accent, fontSize: 12, fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', marginBottom: 12 }}>
                       <Icon size={15}/> {s.eyebrow}
@@ -230,10 +230,10 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
             </div>
             <div style={{ position: 'relative', height: 380 }}>
               <div style={{ position: 'absolute', top: 0, left: 0, width: '60%' }}>
-                <FoodPlaceholder label="Insumos volumen" aspect="3/4" rounded={18} accent={accent} tone="cool"/>
+                <ImagenEditable src={data.images.horeca} label="Insumos volumen" aspect="3/4" rounded={18} accent={accent} tone="cool"/>
               </div>
               <div style={{ position: 'absolute', bottom: 0, right: 0, width: '60%' }}>
-                <FoodPlaceholder label="Cocina" aspect="3/4" rounded={18} accent={accent} tone="cream"/>
+                <ImagenEditable src={data.images.heroADetail} label="Cocina" aspect="3/4" rounded={18} accent={accent} tone="cream"/>
               </div>
             </div>
           </div>
@@ -287,16 +287,12 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
           <div>
             <ApaLogo variant="white" height={42}/>
             <p style={{ fontSize: 13.5, lineHeight: 1.6, margin: '20px 0 0', maxWidth: 280 }}>
-              Eficiencia profesional con sabor artesanal. Buenos Aires, Argentina.
+              {data.footerTagline}
             </p>
           </div>
-          {[
-            { t: 'Soluciones', items: ['Viandas Empresas', 'Market Hogar', 'HoReCa', 'Catering'] },
-            { t: 'Empresa', items: ['Nosotros', 'Trabajá con nosotros', 'Prensa', 'Contacto'] },
-            { t: 'Legales', items: ['Términos', 'Privacidad', 'Habilitaciones', 'SENASA'] },
-          ].map(c => (
-            <div key={c.t}>
-              <div style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, color: '#fff', marginBottom: 14 }}>{c.t}</div>
+          {data.footerColumns.map(c => (
+            <div key={c.title}>
+              <div style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, color: '#fff', marginBottom: 14 }}>{c.title}</div>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {c.items.map(i => <li key={i}><a href="#" style={{ color: 'rgba(255,255,255,.65)', textDecoration: 'none', fontSize: 13.5 }}>{i}</a></li>)}
               </ul>
@@ -305,7 +301,7 @@ function OptionB({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
         </div>
         <div style={{ maxWidth: 1320, margin: '40px auto 0', paddingTop: 24, borderTop: '1px solid rgba(255,255,255,.1)', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(255,255,255,.5)' }}>
           <div>© 2026 APA Soluciones Gastronómicas. Todos los derechos reservados.</div>
-          <div>CUIT 30-12345678-9</div>
+          <div>{data.footerCuit}</div>
         </div>
       </footer>
 
@@ -330,7 +326,7 @@ function CategoryRow({ cat, accent, navy, cardBg }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18 }}>
         {cat.items.map((item, i) => (
           <article key={i} style={{ background: cardBg, borderRadius: 18, padding: 14, border: '1px solid rgba(10,31,61,.05)', transition: 'transform .2s', cursor: 'pointer' }}>
-            <FoodPlaceholder label={item.name} aspect="1/1" rounded={12} accent={accent}/>
+            <ImagenEditable src={item.img} label={item.name} aspect="1/1" rounded={12} accent={accent}/>
             <div style={{ padding: '14px 6px 4px' }}>
               <h4 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: 16, fontWeight: 700, margin: '0 0 4px', color: navy }}>{item.name}</h4>
               <p style={{ fontSize: 12.5, color: 'rgba(10,31,61,.6)', lineHeight: 1.45, margin: 0, minHeight: 36 }}>{item.desc}</p>

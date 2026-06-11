@@ -22,7 +22,7 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
       }}>
         <ApaLogo variant="color" height={42}/>
         <div style={{ display: 'flex', gap: 30, fontSize: 13.5, fontWeight: 500 }}>
-          {['Inicio', 'Viandas Empresas', 'Market Hogar', 'Nuestro Menú', 'Nosotros', 'Contacto'].map((l, i) => (
+          {data.navItems.map((l, i) => (
             <a key={l} href={`#${l.toLowerCase().replace(/ /g, '-')}`} style={{ color: i === 0 ? navy : 'rgba(10,31,61,.65)', textDecoration: 'none' }}>{l}</a>
           ))}
         </div>
@@ -68,10 +68,10 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
 
               {/* Stats inline */}
               <div style={{ display: 'flex', gap: 48, marginTop: 64, paddingTop: 30, borderTop: '1px solid rgba(10,31,61,.1)' }}>
-                {[['+15 años', 'En el rubro'], ['+80', 'Empresas confían'], ['98%', 'Entregas a tiempo']].map(([n, l]) => (
-                  <div key={l}>
-                    <div style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: 28, fontWeight: 700, color: navy }}>{n}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(10,31,61,.55)', marginTop: 2 }}>{l}</div>
+                {data.stats.map(({ num, label }) => (
+                  <div key={label}>
+                    <div style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: 28, fontWeight: 700, color: navy }}>{num}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(10,31,61,.55)', marginTop: 2 }}>{label}</div>
                   </div>
                 ))}
               </div>
@@ -80,10 +80,10 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
             {/* Hero image collage */}
             <div style={{ position: 'relative', height: 580 }}>
               <div style={{ position: 'absolute', top: 0, right: 0, width: '78%' }}>
-                <FoodPlaceholder label="Plato terminado · hero" aspect="4/5" rounded={16} accent={accent}/>
+                <ImagenEditable src={data.images.heroA} label="Plato terminado · hero" aspect="4/5" rounded={16} accent={accent}/>
               </div>
               <div style={{ position: 'absolute', bottom: 30, left: 0, width: '52%' }}>
-                <FoodPlaceholder label="Detalle · materia prima" aspect="1/1" rounded={16} accent={accent} tone="cream"/>
+                <ImagenEditable src={data.images.heroADetail} label="Detalle · materia prima" aspect="1/1" rounded={16} accent={accent} tone="cream"/>
               </div>
               <div style={{ position: 'absolute', bottom: 0, right: 30, width: 130, height: 130, borderRadius: 99, background: navy, color: '#fff', display: 'grid', placeItems: 'center', textAlign: 'center', fontSize: 11.5, lineHeight: 1.4, padding: 14, boxShadow: '0 12px 30px rgba(10,31,61,.2)' }}>
                 <div>
@@ -113,8 +113,8 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28 }}>
             {[
-              { eyebrow: data.servicioAEyebrow, title: data.servicioATitle, desc: data.servicioADesc, icon: Icons.Building, points: ['Comedores in-company', 'Viandas individuales', 'Catering corporativo', 'Reportes nutricionales'] },
-              { eyebrow: data.servicioBEyebrow, title: data.servicioBTitle, desc: data.servicioBDesc, icon: Icons.Home, points: ['Pedido online + retiro', 'Envío domicilio CABA/GBA', 'Suscripción semanal', 'Pack familiar'] },
+              { eyebrow: data.servicioAEyebrow, title: data.servicioATitle, desc: data.servicioADesc, icon: Icons.Building, img: data.images.servicioA, points: ['Comedores in-company', 'Viandas individuales', 'Catering corporativo', 'Reportes nutricionales'] },
+              { eyebrow: data.servicioBEyebrow, title: data.servicioBTitle, desc: data.servicioBDesc, icon: Icons.Home, img: data.images.servicioB, points: ['Pedido online + retiro', 'Envío domicilio CABA/GBA', 'Suscripción semanal', 'Pack familiar'] },
             ].map((s, i) => {
               const Icon = s.icon;
               return (
@@ -123,7 +123,7 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
                   borderRadius: 18, padding: 36, position: 'relative', overflow: 'hidden',
                 }}>
                   <div style={{ width: '100%', marginBottom: 26 }}>
-                    <FoodPlaceholder label={`${s.eyebrow} · imagen`} aspect="16/9" rounded={12} accent={accent} dark/>
+                    <ImagenEditable src={s.img} label={`${s.eyebrow} · imagen`} aspect="16/9" rounded={12} accent={accent} dark/>
                   </div>
                   <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 11px', borderRadius: 99, background: 'rgba(242,106,31,.18)', color: accent, fontSize: 11.5, fontWeight: 600, marginBottom: 18 }}>
                     <Icon size={14}/> {s.eyebrow}
@@ -186,7 +186,7 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20 }}>
               {cats[activeCat].items.map((item, i) => (
                 <article key={i} style={{ position: 'relative' }}>
-                  <FoodPlaceholder label={item.name} aspect="4/5" rounded={14} accent={accent}/>
+                  <ImagenEditable src={item.img} label={item.name} aspect="4/5" rounded={14} accent={accent}/>
                   <div style={{ padding: '16px 4px 0' }}>
                     <h4 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: 17, fontWeight: 700, margin: '0 0 6px' }}>{item.name}</h4>
                     <p style={{ fontSize: 13, color: 'rgba(10,31,61,.6)', lineHeight: 1.45, margin: 0 }}>{item.desc}</p>
@@ -230,7 +230,7 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
       <section style={{ ...sectionPad }}>
         <div style={maxw}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: 60, alignItems: 'center' }}>
-            <FoodPlaceholder label="Cocina industrial · HoReCa" aspect="4/5" rounded={16} accent={accent} tone="cool"/>
+            <ImagenEditable src={data.images.horeca} label="Cocina industrial · HoReCa" aspect="4/5" rounded={16} accent={accent} tone="cool"/>
             <div>
               <div style={{ fontSize: 11, letterSpacing: '.18em', color: accent, fontWeight: 600, marginBottom: 14 }}>04 — HoReCa</div>
               <h2 style={{ fontFamily: '"Plus Jakarta Sans", sans-serif', fontSize: 48, lineHeight: 1.05, letterSpacing: '-.02em', fontWeight: 700, margin: '0 0 22px' }}>
@@ -302,16 +302,12 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
           <div>
             <ApaLogo variant="color" height={42}/>
             <p style={{ fontSize: 13.5, color: 'rgba(10,31,61,.65)', lineHeight: 1.6, margin: '20px 0 0', maxWidth: 280 }}>
-              Eficiencia profesional con sabor artesanal. Buenos Aires, Argentina.
+              {data.footerTagline}
             </p>
           </div>
-          {[
-            { t: 'Soluciones', items: ['Viandas Empresas', 'Market Hogar', 'HoReCa', 'Catering'] },
-            { t: 'Empresa', items: ['Nosotros', 'Trabajá con nosotros', 'Prensa', 'Contacto'] },
-            { t: 'Legales', items: ['Términos', 'Privacidad', 'Habilitaciones', 'SENASA'] },
-          ].map(c => (
-            <div key={c.t}>
-              <div style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, color: navy, marginBottom: 14 }}>{c.t}</div>
+          {data.footerColumns.map(c => (
+            <div key={c.title}>
+              <div style={{ fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', fontWeight: 700, color: navy, marginBottom: 14 }}>{c.title}</div>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {c.items.map(i => <li key={i}><a href="#" style={{ color: 'rgba(10,31,61,.65)', textDecoration: 'none', fontSize: 13.5 }}>{i}</a></li>)}
               </ul>
@@ -320,7 +316,7 @@ function OptionA({ data, accent = '#F26A1F', navy = '#0A1F3D' }) {
         </div>
         <div style={{ ...maxw, marginTop: 40, paddingTop: 24, borderTop: '1px solid rgba(10,31,61,.1)', display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(10,31,61,.5)' }}>
           <div>© 2026 APA Soluciones Gastronómicas. Todos los derechos reservados.</div>
-          <div>CUIT 30-12345678-9</div>
+          <div>{data.footerCuit}</div>
         </div>
       </footer>
 

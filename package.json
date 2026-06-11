@@ -1,0 +1,24 @@
+{
+  "name": "web-apa",
+  "version": "1.0.0",
+  "description": "> **Eficiencia profesional con sabor artesanal.** > Landing page para APA Soluciones Gastronómicas: viandas para empresas, productos *ready-to-cook* para el hogar e insumos para restaurantes (HoReCa).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lflogistica18-lang/Web-Apa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/lflogistica18-lang/Web-Apa/issues"
+  },
+  "homepage": "https://github.com/lflogistica18-lang/Web-Apa#readme",
+  "dependencies": {
+    "jsdom": "^29.1.1"
+  }
+}
